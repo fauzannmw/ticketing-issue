@@ -1,0 +1,69 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Account {
+    id                String  @id @default(cuid())
+    userId            String  @unique // Added @unique to ensure one User has only one Account
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? @db.Text
+    session_state     String?
+
+    user              User?   @relation(fields: [userId], references: [id]) // Added relation to User
+
+    @@unique([provider, providerAccountId])
+}
+
+model User {
+    id         String    @id @default(cuid())
+    name       String?
+    email      String?   @unique
+    createdAt  DateTime  @default(now()) @map(name: "created_at")
+    updatedAt  DateTime  @updatedAt @map(name: "updated_at")
+    division   Division? @relation(fields: [divisionId], references: [id])
+    divisionId String?
+    tickets    Ticket[]
+    
+    account    Account?  @relation // Added relation to Account
+
+    @@map(name: "users")
+}
+
+model Ticket {
+    id         String    @id @default(cuid())
+    issue      String
+    status     Status
+    author     User?     @relation(fields: [authorId], references: [id])
+    authorId   String?
+    division   Division? @relation(fields: [divisionId], references: [id])
+    divisionId String?
+
+    @@map(name: "tickets")
+}
+
+model Division {
+    id      String   @id @default(cuid())
+    name    String
+    users   User[]
+    tickets Ticket[]
+
+    @@map(name: "divisions")
+}
+
+enum Status {
+    PENDING
+    IN_PROGRESS
+    COMPLETE
+}
