@@ -1,13 +1,19 @@
 "use client";
 import { Input, Select, SelectItem } from "@nextui-org/react";
 
-export const departments = [
-  { key: "it", label: "IT" },
-  { key: "marketing", label: "Marketing" },
-  { key: "reporter", label: "Reporter" },
-  { key: "socialmedia", label: "Socialmedia" },
-  { key: "hc", label: "HC" },
-];
+// Tambahkan tipe untuk department
+export type Department = {
+  key: string;
+  label: string;
+};
+
+// export const departments: Array<Department> = [
+//   { key: "it", label: "IT" },
+//   { key: "marketing", label: "Marketing" },
+//   { key: "reporter", label: "Reporter" },
+//   { key: "socialmedia", label: "Socialmedia" },
+//   { key: "hc", label: "HC" },
+// ];
 
 export default function TicketFormPage() {
   return (
@@ -18,11 +24,11 @@ export default function TicketFormPage() {
       >
         <h1 className="text-lg font-semibold">Assign Ticket</h1>
         <Input type="text" label="Task" radius="sm" variant="bordered" />
-        <Select label="Assign To" radius="sm" variant="bordered">
+        {/* <Select label="Assign To" radius="sm" variant="bordered">
           {departments.map((department) => (
             <SelectItem key={department.key}>{department.label}</SelectItem>
           ))}
-        </Select>
+        </Select> */}
         <button className="p-3 border-2 border-zinc-200 rounded-md font-semibold hover:border-zinc-400 transition duration-500">
           Submit
         </button>
