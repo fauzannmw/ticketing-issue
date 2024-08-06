@@ -8,49 +8,49 @@ datasource db {
 }
 
 model Account {
-    id                String  @id @default(cuid())
-    userId            String  @unique // Added @unique to ensure one User has only one Account
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? @db.Text
-    access_token      String? @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? @db.Text
-    session_state     String?
+    id            String    @id @default(cuid())
+    user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId        String    @unique @map(name: "user_id")
+    email         String    @unique
+    emailVerified DateTime? @map("email_verified")
+    passwordHash  String
+    sessions      Session[]
 
-    user              User?   @relation(fields: [userId], references: [id]) // Added relation to User
+    @@map(name: "accounts")
+}
 
-    @@unique([provider, providerAccountId])
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique @map("session_token")
+    account      Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+    accountId    String   @map("account_id")
+    expireAt     DateTime @map("expire_at")
+    ipAddress    String?
+    userAgent    String?
+
+    @@map("sessions")
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expireAt   DateTime @map("expire_at")
+
+    @@unique([identifier, token])
+    @@map("verification_tokens")
 }
 
 model User {
     id         String    @id @default(cuid())
-    name       String?
-    email      String?   @unique
+    name       String
+    division   Division? @relation(fields: [divisionId], references: [id])
+    divisionId String?   @map(name: "division_id")
+    account    Account?  @relation
+    tickets    Ticket[]
     createdAt  DateTime  @default(now()) @map(name: "created_at")
     updatedAt  DateTime  @updatedAt @map(name: "updated_at")
-    division   Division? @relation(fields: [divisionId], references: [id])
-    divisionId String?
-    tickets    Ticket[]
-    
-    account    Account?  @relation // Added relation to Account
 
     @@map(name: "users")
-}
-
-model Ticket {
-    id         String    @id @default(cuid())
-    issue      String
-    status     Status
-    author     User?     @relation(fields: [authorId], references: [id])
-    authorId   String?
-    division   Division? @relation(fields: [divisionId], references: [id])
-    divisionId String?
-
-    @@map(name: "tickets")
 }
 
 model Division {
@@ -60,6 +60,20 @@ model Division {
     tickets Ticket[]
 
     @@map(name: "divisions")
+}
+
+model Ticket {
+    id         String    @id @default(cuid())
+    issue      String
+    status     Status
+    author     User?     @relation(fields: [authorId], references: [id])
+    authorId   String?   @map(name: "author_id")
+    division   Division? @relation(fields: [divisionId], references: [id])
+    divisionId String?   @map(name: "division_id")
+    createdAt  DateTime  @default(now()) @map(name: "created_at")
+    updatedAt  DateTime  @updatedAt @map(name: "updated_at")
+
+    @@map(name: "tickets")
 }
 
 enum Status {
