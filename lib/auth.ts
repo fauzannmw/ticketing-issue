@@ -5,7 +5,6 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import { loginByCredential } from "@/server/get_action";
 import { signInSchema } from "@/lib/utils/validation";
-import { ZodError } from "zod";
 
 const prisma = new PrismaClient();
 
@@ -38,28 +37,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: {},
       },
       authorize: async (credentials) => {
-        try {
-          const { email, password } = await signInSchema.parseAsync(
-            credentials
-          );
-          console.log(email, password);
+        const { email, password } = await signInSchema.parseAsync(credentials);
+        console.log(email, password);
 
-          const user = await loginByCredential(
-            email as string,
-            password as string
-          );
+        const user = await loginByCredential(
+          email as string,
+          password as string
+        );
 
-          if (!user) {
-            throw new Error("Invalid email or password.");
-          }
-
-          return user;
-        } catch (error) {
-          if (error instanceof ZodError) {
-            // Return `null` to indicate that the credentials are invalid
-            return null;
-          }
+        if (!user) {
+          throw new Error("Invalid email or password.");
         }
+
+        return user;
       },
     }),
   ],

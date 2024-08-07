@@ -25,7 +25,7 @@ export default function NavbarUi() {
         Add Ticket
       </Link>
       <button className="px-3 py-1 text-white border-2 border-white rounded-md hover:text-neutral-300 hover:bg-neutral-800 transition duration-500">
-        Login
+        <Link href={"/sign-in"}>Login</Link>
       </button>
     </nav>
   );
