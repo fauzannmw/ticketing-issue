@@ -8,14 +8,19 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const authOptions = {
-  adapter: PrismaAdapter(prisma),
+export const {
+  auth,
+  signIn,
+  signOut,
+  handlers: { GET, POST },
+} = NextAuth({
+  ...authConfig,
   providers: [
     Credentials({
-      name: "Credentials",
+      name: "credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        email: { label: "email", type: "text" },
+        password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
         const res = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
@@ -26,9 +31,7 @@ export const authOptions = {
             password: credentials?.password,
           }),
         });
-
         const user = await res.json();
-
         if (res.ok && user) {
           return user;
         } else {
@@ -37,20 +40,4 @@ export const authOptions = {
       },
     }),
   ],
-  callbacks: {
-    async session({ session, token }) {
-      session.user.id = token.sub;
-      session.user.email = token.email;
-      return session;
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        token.sub = user.id;
-        token.email = user.email;
-      }
-      return token;
-    },
-  },
-};
-
-export default NextAuth(authOptions);
+});

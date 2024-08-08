@@ -1,54 +1,38 @@
-// @/app/sign-in/page.tsx
-
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { loginByCredential } from "@/server/auth_action";
+import { useFormState } from "react-dom";
 
-export default function SignIn() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const router = useRouter();
+const loginInitialState = {
+  message: "",
+  errors: {
+    email: "",
+    password: "",
+    credentials: "",
+    unknown: "",
+  },
+};
 
-  const handleSignIn = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      console.log("Login successful", data);
-      router.push("/"); // Redirect to dashboard or any other page after successful login
-    } else {
-      const errorData = await response.json();
-      setError(errorData.error || "Login failed");
-    }
-  };
+const Form = () => {
+  const [formState, formAction] = useFormState(
+    loginByCredential,
+    loginInitialState
+  );
 
   return (
     <main className="h-full w-full max-w-3xl flex justify-center items-center my-12 text-neutral-50">
-      <form className="w-full h-full mt-8 space-y-6" onSubmit={handleSignIn}>
+      <form className="w-full h-full mt-8 space-y-6" action={formAction}>
         <div className="rounded-md shadow-sm -space-y-px">
           <div>
             <label htmlFor="email" className="sr-only">
               Email address
             </label>
             <input
-              id="email"
+              placeholder="Email address"
               name="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               required
               className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="Email address"
             />
           </div>
           <div>
@@ -56,19 +40,14 @@ export default function SignIn() {
               Password
             </label>
             <input
-              id="password"
+              placeholder="Password"
               name="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               required
               className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="Password"
             />
           </div>
         </div>
-
-        {error && <div className="text-red-500 text-sm">{error}</div>}
 
         <div>
           <button
@@ -81,4 +60,6 @@ export default function SignIn() {
       </form>
     </main>
   );
-}
+};
+
+export default Form;

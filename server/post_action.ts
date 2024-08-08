@@ -4,28 +4,6 @@ import prisma from "@/lib/db";
 import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
 
-export const createUser = async (params: any) => {
-  const saltRounds = 10;
-  const passwordHash = await bcrypt.hash(params.password, saltRounds);
-
-  try {
-    const user = await prisma.user.create({
-      data: {
-        name: params.name,
-        divisionId: params.divisionId,
-        account: {
-          create: {
-            email: params.email,
-            passwordHash,
-          },
-        },
-      },
-    });
-  } catch (error) {}
-
-  return redirect("/");
-};
-
 export async function loginByCredential(email: string, password: string) {
   const account = await prisma.account.findUnique({
     where: {

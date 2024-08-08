@@ -6,7 +6,7 @@ export const authConfig = {
   },
   pages: {
     error: "/",
-    signIn: "/",
+    signIn: "/login",
     signOut: "/",
   },
   callbacks: {
