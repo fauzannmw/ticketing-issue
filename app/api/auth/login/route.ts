@@ -1,8 +1,9 @@
+// @/app/api/auth/login/route.ts
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import prisma from "@/lib/db"; // pastikan path ini sesuai dengan lokasi prisma client di proyek Anda
+import prisma from "@/lib/db";
 
-export async function POST(request: Request) {
+export async function POST(request: Request) {  
   const { email, password } = await request.json();
 
   // Cari user berdasarkan email
