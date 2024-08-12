@@ -13,7 +13,7 @@ const loginInitialState = {
   },
 };
 
-const Form = () => {
+export default function LoginPage() {
   const [formState, formAction] = useFormState(
     loginByCredential,
     loginInitialState
@@ -60,6 +60,4 @@ const Form = () => {
       </form>
     </main>
   );
-};
-
-export default Form;
+}

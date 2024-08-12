@@ -4,6 +4,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -32,9 +33,26 @@ export default function SignIn() {
     }
   };
 
+  const handelSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const response = await signIn("credentials", {
+      email: email,
+      password: password,
+      redirect: true,
+      // callbackUrl: "/",
+    });
+
+    console.log("Selesai handleSubmit", response);
+
+    if (response?.ok) {
+      console.log("Login successful", response);
+    }
+  };
+
   return (
     <main className="h-full w-full max-w-3xl flex justify-center items-center my-12 text-neutral-50">
-      <form className="w-full h-full mt-8 space-y-6" onSubmit={handleSignIn}>
+      <form className="w-full h-full mt-8 space-y-6" onSubmit={handelSubmit}>
         <div className="rounded-md shadow-sm -space-y-px">
           <div>
             <label htmlFor="email" className="sr-only">

@@ -71,6 +71,6 @@ export async function loginByCredential(prevState: any, formData: FormData) {
   }
 }
 
-export async function logout() {
+export async function logoutSession() {
   await signOut();
 }

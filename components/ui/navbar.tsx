@@ -3,13 +3,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function NavbarUi() {
   const currentPath = usePathname();
+  const { data: session } = useSession();
 
   const handleLogin = () => {
     signIn();
+  };
+  const handleLogout = () => {
+    signOut();
   };
 
   return (
@@ -30,12 +34,21 @@ export default function NavbarUi() {
       >
         Add Ticket
       </Link>
-      <button
-        onClick={handleLogin}
-        className="px-3 py-1 text-white border-2 border-white rounded-md hover:text-neutral-300 hover:bg-neutral-800 transition duration-500"
-      >
-        Login
-      </button>
+      {session?.user ? (
+        <button
+          onClick={handleLogin}
+          className="px-3 py-1 text-white border-2 border-white rounded-md hover:text-neutral-300 hover:bg-neutral-800 transition duration-500"
+        >
+          Logout
+        </button>
+      ) : (
+        <button
+          onClick={handleLogin}
+          className="px-3 py-1 text-white border-2 border-white rounded-md hover:text-neutral-300 hover:bg-neutral-800 transition duration-500"
+        >
+          Login
+        </button>
+      )}
     </nav>
   );
 }

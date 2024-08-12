@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import prisma from "@/lib/db";
 
-export async function POST(request: Request) {  
+export async function POST(request: Request) {
   const { email, password } = await request.json();
 
   // Cari user berdasarkan email
@@ -11,6 +11,8 @@ export async function POST(request: Request) {
     where: { email },
     include: { user: true },
   });
+
+  console.log("Selesai cek Email", account);
 
   if (!account || !account.passwordHash) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -21,6 +23,8 @@ export async function POST(request: Request) {
   if (!isPasswordValid) {
     return NextResponse.json({ error: "Invalid password" }, { status: 401 });
   }
+
+  console.log("Selesai cek Kecocokan Password", isPasswordValid);
 
   // Jika sukses, kirim data user
   return NextResponse.json({
