@@ -34,7 +34,7 @@ export default function SignUpPage() {
 
       if (response.ok) {
         // alkdjaslkdsl
-        // kjsadhasdjhad
+        //  
         router.push("/sign-in"); // redirect to login after successful registration
       } else {
         const { message } = await response.json();
