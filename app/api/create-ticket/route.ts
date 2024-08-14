@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   try {
     const { issue, divisionId, userId } = await request.json();
 
-    // Melakukan pengecekan isi dari Issue, Division Id, dan User Id
+    // Check the presence of issue, divisionId, and userId
     if (!issue || !divisionId || !userId) {
       console.error("Missing required fields:", { issue, divisionId, userId });
       return NextResponse.json(
@@ -14,10 +14,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Pastikan bahwa divisionId adalah integer, jika perlu convert
+    // Ensure that divisionId is an integer, convert if necessary
     const idDivision = parseInt(divisionId, 10);
 
-    // Verifikasi bahwa division dengan ID tersebut ada di database
+    // Verify that the division with the specified ID exists in the database
     const divisionExists = await prisma.division.findUnique({
       where: { id: idDivision },
     });
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid division" }, { status: 404 });
     }
 
-    // Buat ticket baru di database
+    // Create a new ticket in the database
     const newTicket = await prisma.ticket.create({
       data: {
         issue,

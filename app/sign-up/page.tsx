@@ -14,6 +14,7 @@ export default function SignUpPage() {
     divisionId: 1,
   });
 
+  // Handle changes to form fields
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -24,6 +25,7 @@ export default function SignUpPage() {
     });
   };
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -36,15 +38,14 @@ export default function SignUpPage() {
       });
 
       if (response.ok) {
-        // alkdjaslkdsl
-        // kjsadhasdjhad
-        router.push("/sign-in"); // redirect to login after successful registration
+        // Redirect to sign-in page after successful registration
+        router.push("/sign-in");
       } else {
         const { message } = await response.json();
-        alert(message);
+        alert(message); // Show error message if registration fails
       }
     } catch (error) {
-      console.error("Error during registration:", error);
+      console.error("Error during registration:", error); // Log errors during registration
     }
   };
 
@@ -60,7 +61,7 @@ export default function SignUpPage() {
             id="name"
             name="name"
             type="text"
-            placeholder="Nama Lengkap"
+            placeholder="Full Name"
             value={formData.name}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded"
@@ -75,7 +76,7 @@ export default function SignUpPage() {
             id="email"
             name="email"
             type="email"
-            placeholder="Alamat Email"
+            placeholder="Email Address"
             value={formData.email}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded"
@@ -121,10 +122,10 @@ export default function SignUpPage() {
             Register
           </button>
           <p>
-            Sudah memiliki akun?&nbsp;
+            Already have an account?&nbsp;
             <span>
               <Link href={"/sign-in"} className="text-blue-600 underline">
-                Klik disini
+                Click here
               </Link>
             </span>
           </p>

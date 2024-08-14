@@ -1,4 +1,6 @@
 // @/app/sign-in/page.tsx
+// alkdjaslkdsl
+// kjsadhasdjhad
 
 "use client";
 
@@ -14,9 +16,12 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  // Handle form submission
   const handelSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
     try {
+      // Attempt to sign in with credentials
       await signIn("credentials", {
         email: email,
         password: password,
@@ -24,8 +29,10 @@ export default function SignIn() {
         callbackUrl: "/",
       });
     } catch (error) {
-      setError("Something Wrong");
+      // Set error message if sign-in fails
+      setError("Something went wrong");
     } finally {
+      // Redirect to home page after submission
       router.push("/");
     }
   };
@@ -77,10 +84,10 @@ export default function SignIn() {
             Sign In
           </button>
           <p>
-            Belum punya akun?&nbsp;
+            Dont have an account?&nbsp;
             <span>
               <Link href={"/sign-up"} className="text-blue-600 underline">
-                Klik disini
+                Click here
               </Link>
             </span>
           </p>

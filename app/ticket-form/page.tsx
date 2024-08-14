@@ -5,8 +5,9 @@ import { useSession } from "next-auth/react";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 
 export const departments = [
-  { key: "1", label: "IT" },
+  { key: "1", label: "Technology" },
   { key: "2", label: "Human Resource" },
+  { key: "3", label: "Creative" },
 ];
 
 export default function TicketFormPage() {
@@ -16,17 +17,18 @@ export default function TicketFormPage() {
   const [divisionId, setDivision] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // Handle form submission
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Cek apakah user sudah login
+    // Check if the user is logged in
     if (!session?.user) {
       console.error("User is not authenticated");
       return;
     }
 
-    // Melakukan pemanggilan api create-ticket
+    // Call the create-ticket API
     const response = await fetch("/api/create-ticket", {
       method: "POST",
       headers: {
@@ -43,9 +45,9 @@ export default function TicketFormPage() {
     setDivision("");
 
     if (response.ok) {
-      router.push("/");
+      router.push("/"); // Redirect to home page on success
     } else {
-      console.error("Failed to create ticket");
+      console.error("Failed to create ticket"); // Log error on failure
     }
   };
 
