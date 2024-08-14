@@ -11,21 +11,21 @@ export const Board: React.FC = () => {
     <div className="h-full w-full max-w-screen-xl flex justify-between gap-3 overflow-scroll">
       <Column
         title="Ticket"
-        column="backlog"
+        status="backlog"
         headingColor="text-white"
         cards={cards}
         setCards={setCards}
       />
       <Column
         title="In progress"
-        column="in-progress"
+        status="in-progress"
         headingColor="text-blue-200"
         cards={cards}
         setCards={setCards}
       />
       <Column
         title="Complete"
-        column="complete"
+        status="complete"
         headingColor="text-emerald-200"
         cards={cards}
         setCards={setCards}

@@ -14,7 +14,7 @@ export const Column: React.FC<ColumnProps> = ({
   title,
   headingColor,
   cards,
-  column,
+  status,
   setCards,
 }) => {
   const [active, setActive] = useState(false);
@@ -39,7 +39,7 @@ export const Column: React.FC<ColumnProps> = ({
 
       let cardToTransfer = copy.find((c) => c.id === cardId);
       if (!cardToTransfer) return;
-      cardToTransfer = { ...cardToTransfer, column };
+      cardToTransfer = { ...cardToTransfer, status };
 
       copy = copy.filter((c) => c.id !== cardId);
 
@@ -112,7 +112,7 @@ export const Column: React.FC<ColumnProps> = ({
 
   const getIndicators = () => {
     return Array.from(
-      document.querySelectorAll(`[data-column="${column}"]`)
+      document.querySelectorAll(`[data-column="${status}"]`)
     ) as HTMLElement[];
   };
 
@@ -121,7 +121,7 @@ export const Column: React.FC<ColumnProps> = ({
     setActive(false);
   };
 
-  const filteredCards = cards.filter((c) => c.column === column);
+  const filteredCards = cards.filter((c) => c.status === status);
 
   return (
     <div className="w-72 shrink-0 p-4 border border-white rounded-md">
@@ -135,47 +135,55 @@ export const Column: React.FC<ColumnProps> = ({
         onDrop={handleDragEnd}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
+        className="my-0.5 border-t-1 border-white"
       >
         {filteredCards.map((c) => (
           <Card key={c.id} {...c} handleDragStart={handleDragStart} />
         ))}
-        <DropIndicator beforeId={null} column={column} />
+        <DropIndicator beforeId={null} status={status} />
       </div>
     </div>
   );
 };
 
-const Card: React.FC<CardProps> = ({ title, id, column, handleDragStart }) => {
+const Card: React.FC<CardProps> = ({
+  id,
+  authorName,
+  issue,
+  status,
+  handleDragStart,
+}) => {
   return (
     <>
-      <DropIndicator beforeId={id} column={column} />
+      <DropIndicator beforeId={id} status={status} />
       <motion.div
         layout
         layoutId={id}
         draggable="true"
         onDragStart={(e) =>
           handleDragStart(e as unknown as React.DragEvent, {
-            title,
+            authorName,
+            issue,
             id,
-            column,
+            status,
           })
         }
         className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
       >
         <p className="text-sm font-semibold text-neutral-100">
-          Requestor : <span>Muhamad Fauzan (IT)</span>
+          Requestor : <span>{authorName} (IT)</span>
         </p>
-        <p className="text-sm text-neutral-100">{title}</p>
+        <p className="text-sm text-neutral-100">{issue}</p>
       </motion.div>
     </>
   );
 };
 
-const DropIndicator: React.FC<DropIndicatorProps> = ({ beforeId, column }) => {
+const DropIndicator: React.FC<DropIndicatorProps> = ({ beforeId, status }) => {
   return (
     <div
       data-before={beforeId || "-1"}
-      data-column={column}
+      data-column={status}
       className="my-0.5 h-0.5 w-full bg-violet-400 opacity-0"
     />
   );

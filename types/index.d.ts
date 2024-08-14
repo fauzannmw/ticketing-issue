@@ -34,30 +34,34 @@ declare module "next-auth/jwt" {
     idToken?: string;
   }
 }
-export interface CardTypes {
-  id: string;
-  title: string;
-  column: string;
-}
 
 export interface ColumnProps {
   title: string;
   headingColor: string;
   cards: CardTypes[];
-  column: string;
+  status: string;
   setCards: React.Dispatch<React.SetStateAction<CardTypes[]>>;
 }
 
 export interface CardProps {
-  title: string;
   id: string;
-  column: string;
+  issue: string;
+  status: string;
+  authorName: string;
   handleDragStart: (e: React.DragEvent, card: CardTypes) => void;
+}
+
+export interface CardTypes {
+  id: string;
+  issue: string;
+  status: string;
+  authorName: string;
+  
 }
 
 export interface DropIndicatorProps {
   beforeId: string | null;
-  column: string;
+  status: string;
 }
 
 export interface BurnBarrelProps {
@@ -65,6 +69,6 @@ export interface BurnBarrelProps {
 }
 
 export interface AddCardProps {
-  column: string;
+  status: string;
   setCards: React.Dispatch<React.SetStateAction<CardTypes[]>>;
 }

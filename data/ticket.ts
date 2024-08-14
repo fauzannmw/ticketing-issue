@@ -1,19 +1,46 @@
 import { CardTypes } from "@/types";
 
 export const ticket_data: CardTypes[] = [
-  { title: "Look into render bug in dashboard", id: "1", column: "backlog" },
-  { title: "SOX compliance checklist", id: "2", column: "backlog" },
-  { title: "[SPIKE] Migrate to Azure", id: "3", column: "backlog" },
-  { title: "Document Notifications service", id: "4", column: "in-progress" },
   {
-    title: "Refactor context providers to use Zustand",
-    id: "5",
-    column: "in-progress",
+    id: "1",
+    issue: "Look into render bug in dashboard",
+    status: "backlog",
+    authorName: "Alice Smith",
   },
-  { title: "Add logging to daily CRON", id: "6", column: "in-progress" },
   {
-    title: "Set up DD dashboards for Lambda listener",
+    id: "2",
+    issue: "SOX compliance checklist",
+    status: "backlog",
+    authorName: "Bob Johnson",
+  },
+  {
+    id: "3",
+    issue: "[SPIKE] Migrate to Azure",
+    status: "backlog",
+    authorName: "Charlie Davis",
+  },
+  {
+    id: "4",
+    issue: "Document Notifications service",
+    status: "in-progress",
+    authorName: "David Lee",
+  },
+  {
+    id: "5",
+    issue: "Refactor context providers to use Zustand",
+    status: "in-progress",
+    authorName: "Eva Brown",
+  },
+  {
+    id: "6",
+    issue: "Add logging to daily CRON",
+    status: "in-progress",
+    authorName: "Frank Wilson",
+  },
+  {
     id: "7",
-    column: "complete",
+    issue: "Set up DD dashboards for Lambda listener",
+    status: "complete",
+    authorName: "Grace Miller",
   },
 ];
