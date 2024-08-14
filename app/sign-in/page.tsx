@@ -8,6 +8,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "@nextui-org/react";
 
 export default function SignIn() {
   const router = useRouter();
@@ -15,10 +16,12 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Handle form submission
   const handelSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setIsLoading(true);
 
     try {
       // Attempt to sign in with credentials
@@ -32,6 +35,7 @@ export default function SignIn() {
       // Set error message if sign-in fails
       setError("Something went wrong");
     } finally {
+      setIsLoading(false);
       // Redirect to home page after submission
       router.push("/");
     }
@@ -77,12 +81,17 @@ export default function SignIn() {
         {error && <div className="text-red-500 text-sm">{error}</div>}
 
         <div className="flex flex-col gap-4">
-          <button
+          <Button
             type="submit"
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            variant="solid"
+            color="primary"
+            radius="sm"
+            size="lg"
+            isLoading={isLoading}
+            className="p-3 font-semibold"
           >
             Sign In
-          </button>
+          </Button>
           <p>
             Dont have an account?&nbsp;
             <span>

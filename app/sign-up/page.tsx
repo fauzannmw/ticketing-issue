@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "@nextui-org/react";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function SignUpPage() {
     password: "",
     divisionId: 1,
   });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Handle changes to form fields
   const handleChange = (
@@ -28,6 +30,7 @@ export default function SignUpPage() {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -46,6 +49,8 @@ export default function SignUpPage() {
       }
     } catch (error) {
       console.error("Error during registration:", error); // Log errors during registration
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -115,12 +120,17 @@ export default function SignUpPage() {
           </select>
         </div>
         <div className="flex flex-col gap-4">
-          <button
+          <Button
             type="submit"
-            className="w-full p-2 bg-blue-600 text-white rounded"
+            variant="solid"
+            color="primary"
+            radius="sm"
+            size="lg"
+            isLoading={isLoading}
+            className="p-3 font-semibold"
           >
-            Register
-          </button>
+            Sign Up
+          </Button>
           <p>
             Already have an account?&nbsp;
             <span>
