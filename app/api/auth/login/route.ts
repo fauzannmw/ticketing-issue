@@ -12,8 +12,6 @@ export async function POST(request: Request) {
     include: { user: true },
   });
 
-  console.log("Selesai cek Email", account);
-
   if (!account || !account.passwordHash) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
@@ -23,8 +21,6 @@ export async function POST(request: Request) {
   if (!isPasswordValid) {
     return NextResponse.json({ error: "Invalid password" }, { status: 401 });
   }
-
-  console.log("Selesai cek Kecocokan Password", isPasswordValid);
 
   // Jika sukses, kirim data user
   return NextResponse.json({

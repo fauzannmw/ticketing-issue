@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+
 import "@/app/globals.css";
 import { Provider } from "@/app/provider";
-import NavbarUi from "@/components/ui/navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Ticketing Issue",
+  title: "Ticketing Issue - Sign Up",
 };
 
-export default function RootLayout({
+export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -20,7 +20,6 @@ export default function RootLayout({
       <body className={`${inter.className} bg-neutral-900`}>
         <Provider>
           <main className="min-h-screen w-full flex flex-col items-center font-mono">
-            <NavbarUi />
             {children}
           </main>
         </Provider>

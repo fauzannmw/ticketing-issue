@@ -18,8 +18,7 @@ export const {
         password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
-        console.log("Mulai masuk next-auth sign-in");
-
+        // Memanggil api auth Login
         const res = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -29,11 +28,8 @@ export const {
           }),
         });
 
-        console.log("Berhasil mendapatkan User dari api", res);
-
+        // Mengubah reponse ke dalam bentuk json
         const user = await res.json();
-
-        console.log("Selesai ubah raw response to json", user);
 
         if (!res.ok) {
           console.error("Login error:", user.user);

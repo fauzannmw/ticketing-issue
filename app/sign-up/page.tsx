@@ -1,6 +1,9 @@
+// @/app/sign-up/page.tsx
+
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -110,12 +113,22 @@ export default function SignUpPage() {
             <option value="2">Human Resource</option>
           </select>
         </div>
-        <button
-          type="submit"
-          className="w-full p-2 bg-blue-600 text-white rounded"
-        >
-          Register
-        </button>
+        <div className="flex flex-col gap-4">
+          <button
+            type="submit"
+            className="w-full p-2 bg-blue-600 text-white rounded"
+          >
+            Register
+          </button>
+          <p>
+            Sudah memiliki akun?&nbsp;
+            <span>
+              <Link href={"/sign-in"} className="text-blue-600 underline">
+                Klik disini
+              </Link>
+            </span>
+          </p>
+        </div>
       </form>
     </main>
   );

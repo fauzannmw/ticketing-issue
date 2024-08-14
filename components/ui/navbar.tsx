@@ -13,7 +13,6 @@ export default function NavbarUi() {
     if (!session) {
       return;
     }
-    console.log(session);
   }, [session]);
 
   const handleLogin = () => {
