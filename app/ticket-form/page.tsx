@@ -5,12 +5,11 @@ import { useSession } from "next-auth/react";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { departments } from "@/data/departments";
 
-
 export default function TicketFormPage() {
   const router = useRouter();
   const { data: session } = useSession();
-  const [issue, setIssue] = useState("");
-  const [divisionId, setDivision] = useState("");
+  const [issue, setIssue] = useState<string>("");
+  const [divisionId, setDivision] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Handle form submission

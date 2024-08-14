@@ -13,9 +13,11 @@ import {
 export const Column: React.FC<ColumnProps> = ({
   title,
   headingColor,
-  cards,
+  // cards,
+  tickets,
   status,
-  setCards,
+  // setCards,
+  setTickets,
 }) => {
   const [active, setActive] = useState(false);
 
@@ -35,7 +37,8 @@ export const Column: React.FC<ColumnProps> = ({
     const before = element.dataset.before || "-1";
 
     if (before !== cardId) {
-      let copy = [...cards];
+      // let copy = [...cards];
+      let copy = [...tickets];
 
       let cardToTransfer = copy.find((c) => c.id === cardId);
       if (!cardToTransfer) return;
@@ -54,7 +57,8 @@ export const Column: React.FC<ColumnProps> = ({
         copy.splice(insertAtIndex, 0, cardToTransfer);
       }
 
-      setCards(copy);
+      // setCards(copy);
+      setTickets(copy);
     }
   };
 
@@ -121,7 +125,8 @@ export const Column: React.FC<ColumnProps> = ({
     setActive(false);
   };
 
-  const filteredCards = cards.filter((c) => c.status === status);
+  // const filteredCards = cards.filter((c) => c.status === status);
+  const filteredCards = tickets.filter((c) => c.status === status);
 
   return (
     <div className="w-72 shrink-0 p-4 border border-white rounded-md">
@@ -149,6 +154,7 @@ export const Column: React.FC<ColumnProps> = ({
 const Card: React.FC<CardProps> = ({
   id,
   authorName,
+  authorDivision,
   issue,
   status,
   handleDragStart,
@@ -162,16 +168,20 @@ const Card: React.FC<CardProps> = ({
         draggable="true"
         onDragStart={(e) =>
           handleDragStart(e as unknown as React.DragEvent, {
-            authorName,
-            issue,
             id,
+            issue,
+            authorName,
+            authorDivision,
             status,
           })
         }
         className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
       >
         <p className="text-sm font-semibold text-neutral-100">
-          Requestor : <span>{authorName} (IT)</span>
+          Requestor :{" "}
+          <span>
+            {authorName} ({authorDivision})
+          </span>
         </p>
         <p className="text-sm text-neutral-100">{issue}</p>
       </motion.div>
@@ -189,7 +199,10 @@ const DropIndicator: React.FC<DropIndicatorProps> = ({ beforeId, status }) => {
   );
 };
 
-export const BurnBarrel: React.FC<BurnBarrelProps> = ({ setCards }) => {
+export const BurnBarrel: React.FC<BurnBarrelProps> = ({
+  // setCards,
+  setTickets,
+}) => {
   const [active, setActive] = useState(false);
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -204,7 +217,8 @@ export const BurnBarrel: React.FC<BurnBarrelProps> = ({ setCards }) => {
   const handleDragEnd = (e: React.DragEvent) => {
     const cardId = e.dataTransfer.getData("cardId");
 
-    setCards((pv) => pv.filter((c) => c.id !== cardId));
+    // setCards((pv) => pv.filter((c) => c.id !== cardId));
+    setTickets((pv) => pv.filter((c) => c.id !== cardId));
 
     setActive(false);
   };
