@@ -1,5 +1,5 @@
 "use client";
-import { ticket_data } from "@/data/ticket";
+import { ticket_data } from "@/data/tickets";
 import { CardTypes } from "@/types";
 import { useState } from "react";
 import { BurnBarrel, Column } from "@/components/ui/kanban";

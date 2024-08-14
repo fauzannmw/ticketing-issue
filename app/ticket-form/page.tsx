@@ -3,12 +3,8 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import { departments } from "@/data/departments";
 
-export const departments = [
-  { key: "1", label: "Technology" },
-  { key: "2", label: "Human Resource" },
-  { key: "3", label: "Creative" },
-];
 
 export default function TicketFormPage() {
   const router = useRouter();
