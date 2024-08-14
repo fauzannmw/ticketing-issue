@@ -36,28 +36,36 @@ export const {
         console.log("Selesai ubah raw response to json", user);
 
         if (!res.ok) {
-          console.error("Login error:", user); // Tambahkan log untuk melihat kesalahan
+          console.error("Login error:", user.user);
           return null;
         }
 
-        console.log("Response.ok ada");
-
-        return user;
+        return user.user;
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
-      // Persist the OAuth access_token to the token right after signin
-      if (account) {
-        token.accessToken = account.access_token;
+    async jwt({ token, account, user }) {
+      if (user) {
+        token.userId = user.id;
+        // @ts-ignore
+        token.userDivisionId = user.division;
       }
       return token;
     },
     async session({ session, token, user }) {
-      // Send properties to the client, like an access_token from a provider.
-      session.user = user;
+      if (token) {
+        // @ts-ignore
+        session.user.userId = token.userId;
+        // @ts-ignore
+        session.user.userDivisionId = token.userDivisionId;
+      }
       return session;
+    },
+    authorized({ auth }) {
+      const isAuthenticated = !!auth?.user;
+
+      return isAuthenticated;
     },
   },
 });

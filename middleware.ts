@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import { authConfig } from "@/lib/auth.config";
-import { DEFAULT_REDIRECT, PUBLIC_ROUTES, ROOT } from "@/lib/route";
+import { PUBLIC_ROUTES, ROOT } from "@/lib/route";
 
 const { auth } = NextAuth(authConfig);
 
@@ -9,9 +9,6 @@ export default auth((req) => {
 
   const isAuthenticated = !!req.auth;
   const isPublicRoute = PUBLIC_ROUTES.includes(nextUrl.pathname);
-
-  if (isPublicRoute && isAuthenticated)
-    return Response.redirect(new URL(DEFAULT_REDIRECT, nextUrl));
 
   if (!isAuthenticated && !isPublicRoute)
     return Response.redirect(new URL(ROOT, nextUrl));

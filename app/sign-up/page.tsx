@@ -34,7 +34,7 @@ export default function SignUpPage() {
 
       if (response.ok) {
         // alkdjaslkdsl
-        //  
+        // kjsadhasdjhad
         router.push("/sign-in"); // redirect to login after successful registration
       } else {
         const { message } = await response.json();
@@ -46,8 +46,9 @@ export default function SignUpPage() {
   };
 
   return (
-    <main className="h-full w-full max-w-3xl flex justify-center items-center my-12 text-neutral-50">
-      <form onSubmit={handleSubmit} className="w-full space-y-4 text-black">
+    <main className="h-full w-11/12 md:w-1/2 flex justify-center items-center my-12 text-neutral-50">
+      <form onSubmit={handleSubmit} className="w-full space-y-4">
+        <h1 className="text-xl font-semibold">Sign Up</h1>
         <div>
           <label className="text-white" htmlFor="name">
             Name
@@ -56,9 +57,10 @@ export default function SignUpPage() {
             id="name"
             name="name"
             type="text"
+            placeholder="Nama Lengkap"
             value={formData.name}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full p-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded"
             required
           />
         </div>
@@ -70,9 +72,10 @@ export default function SignUpPage() {
             id="email"
             name="email"
             type="email"
+            placeholder="Alamat Email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full p-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded"
             required
           />
         </div>
@@ -84,9 +87,10 @@ export default function SignUpPage() {
             id="password"
             name="password"
             type="password"
+            placeholder="Password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full p-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded"
             required
           />
         </div>
@@ -99,7 +103,7 @@ export default function SignUpPage() {
             name="divisionId"
             value={formData.divisionId}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full p-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded"
           >
             <option disabled>Select Division</option>
             <option value="1">Technology</option>

@@ -5,16 +5,7 @@ export const authConfig = {
     strategy: "jwt",
   },
   pages: {
-    error: "/",
     signIn: "/sign-in",
-    signOut: "/",
-  },
-  callbacks: {
-    authorized({ auth }) {
-      const isAuthenticated = !!auth?.user;
-
-      return isAuthenticated;
-    },
   },
   providers: [],
 } satisfies NextAuthConfig;

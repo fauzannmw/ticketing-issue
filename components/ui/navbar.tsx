@@ -4,10 +4,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function NavbarUi() {
   const currentPath = usePathname();
   const { data: session } = useSession();
+  useEffect(() => {
+    if (!session) {
+      return;
+    }
+    console.log(session);
+  }, [session]);
 
   const handleLogin = () => {
     signIn();
@@ -36,7 +43,7 @@ export default function NavbarUi() {
       </Link>
       {session?.user ? (
         <button
-          onClick={handleLogin}
+          onClick={handleLogout}
           className="px-3 py-1 text-white border-2 border-white rounded-md hover:text-neutral-300 hover:bg-neutral-800 transition duration-500"
         >
           Logout
