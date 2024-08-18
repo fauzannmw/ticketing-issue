@@ -1,19 +1,18 @@
+// @/app/kanban-boar/page.tsx
 "use client";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { BurnBarrel, Column } from "@/components/ui/kanban";
-
-import { ticket_data } from "@/data/tickets";
-import { CardTypes } from "@/types";
+import { TrashColumn, Column } from "@/components/ui/kanban";
+import { TicketTypes } from "@/types";
 
 export const Board: React.FC = () => {
   const { data: session } = useSession();
-  const [tickets, setTickets] = useState<CardTypes[]>([]);
-
-  const [cards, setCards] = useState<CardTypes[]>(ticket_data);
+  const [tickets, setTickets] = useState<TicketTypes[]>([]);
+  const [isLoading, setIsLoading] = useState(false); // State untuk loading
 
   useEffect(() => {
     const fetchTickets = async () => {
+      setIsLoading(true); // Set loading menjadi true
       if (session?.user) {
         const response = await fetch("/api/get-all-tickets", {
           method: "POST",
@@ -30,47 +29,40 @@ export const Board: React.FC = () => {
           console.error("Failed to fetch tickets");
         }
       }
+      setIsLoading(false); // Set loading menjadi false
     };
 
     fetchTickets();
   }, [session]);
 
-  console.log(tickets);
-
-  // backlog, in-progress, complete
   return (
     <div className="h-full w-full max-w-screen-xl flex justify-between gap-3 overflow-scroll">
       <Column
         title="Ticket"
         status="PENDING"
         headingColor="text-white"
-        // cards={cards}
-        // setCards={setCards}
         tickets={tickets}
         setTickets={setTickets}
+        isLoading={isLoading} // Pass loading state
       />
       <Column
         title="In progress"
         status="IN_PROGRESS"
         headingColor="text-blue-200"
-        // cards={cards}
-        // setCards={setCards}
         tickets={tickets}
         setTickets={setTickets}
+        isLoading={isLoading} // Pass loading state
       />
       <Column
         title="Complete"
         status="COMPLETE"
         headingColor="text-emerald-200"
-        // cards={cards}
-        // setCards={setCards}
         tickets={tickets}
         setTickets={setTickets}
+        isLoading={isLoading} // Pass loading state
       />
-      <BurnBarrel
-        // setCards={setCards}
-        setTickets={setTickets}
-      />
+      <TrashColumn setTickets={setTickets} />
+      {/* Pass loading state */}
     </div>
   );
 };

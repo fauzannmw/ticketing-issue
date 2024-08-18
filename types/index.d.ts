@@ -1,3 +1,4 @@
+// @/types/index.d.ts
 declare module "next-auth" {
   /**
    * The shape of the user object returned in the OAuth providers' `profile` callback,
@@ -38,11 +39,10 @@ declare module "next-auth/jwt" {
 export interface ColumnProps {
   title: string;
   headingColor: string;
-  // cards: CardTypes[];
-  tickets: CardTypes[];
+  tickets: TicketTypes[];
   status: string;
-  // setCards: React.Dispatch<React.SetStateAction<CardTypes[]>>;
-  setTickets: React.Dispatch<React.SetStateAction<CardTypes[]>>;
+  setTickets: React.Dispatch<React.SetStateAction<TicketTypes[]>>;
+  isLoading: boolean; // Tambahkan prop isLoading
 }
 
 export interface CardProps {
@@ -51,10 +51,11 @@ export interface CardProps {
   status: string;
   authorName: string;
   authorDivision: string;
-  handleDragStart: (e: React.DragEvent, card: CardTypes) => void;
+  handleDragStart: (e: React.DragEvent, card: TicketTypes) => void;
+  isLoading: boolean; // Tambahkan prop isLoading
 }
 
-export interface CardTypes {
+export interface TicketTypes {
   id: string;
   issue: string;
   status: string;
@@ -67,12 +68,6 @@ export interface DropIndicatorProps {
   status: string;
 }
 
-export interface BurnBarrelProps {
-  // setCards: React.Dispatch<React.SetStateAction<CardTypes[]>>;
-  setTickets: React.Dispatch<React.SetStateAction<CardTypes[]>>;
-}
-
-export interface AddCardProps {
-  status: string;
-  setCards: React.Dispatch<React.SetStateAction<CardTypes[]>>;
+export interface TrashColumnProps {
+  setTickets: React.Dispatch<React.SetStateAction<TicketTypes[]>>;
 }

@@ -1,6 +1,6 @@
-import { CardTypes } from "@/types";
+import { TicketTypes } from "@/types";
 
-export const ticket_data: CardTypes[] = [
+export const ticket_data: TicketTypes[] = [
   {
     id: "1",
     issue: "Look into render bug in dashboard",

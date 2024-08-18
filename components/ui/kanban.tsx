@@ -1,34 +1,33 @@
+// @/components/ui/kanban.tsx
 "use client";
 import React, { useState } from "react";
 import { FiTrash, FiArrowDown } from "react-icons/fi";
 import { motion } from "framer-motion";
 import {
-  CardTypes,
+  TicketTypes,
   ColumnProps,
   CardProps,
   DropIndicatorProps,
-  BurnBarrelProps,
+  TrashColumnProps,
 } from "@/types";
 
 export const Column: React.FC<ColumnProps> = ({
   title,
   headingColor,
-  // cards,
   tickets,
   status,
-  // setCards,
   setTickets,
+  isLoading, // Terima prop isLoading
 }) => {
-  const [active, setActive] = useState(false);
-
-  const handleDragStart = (e: React.DragEvent, card: CardTypes) => {
+  const handleDragStart = (e: React.DragEvent, card: TicketTypes) => {
+    if (isLoading) return; // Cegah drag-and-drop saat loading
     e.dataTransfer.setData("cardId", card.id);
   };
 
-  const handleDragEnd = (e: React.DragEvent) => {
+  const handleDragEnd = async (e: React.DragEvent) => {
+    if (isLoading) return; // Cegah drag-and-drop saat loading
     const cardId = e.dataTransfer.getData("cardId");
 
-    setActive(false);
     clearHighlights();
 
     const indicators = getIndicators();
@@ -37,7 +36,6 @@ export const Column: React.FC<ColumnProps> = ({
     const before = element.dataset.before || "-1";
 
     if (before !== cardId) {
-      // let copy = [...cards];
       let copy = [...tickets];
 
       let cardToTransfer = copy.find((c) => c.id === cardId);
@@ -57,16 +55,31 @@ export const Column: React.FC<ColumnProps> = ({
         copy.splice(insertAtIndex, 0, cardToTransfer);
       }
 
-      // setCards(copy);
       setTickets(copy);
+
+      // Update status di backend
+      try {
+        const response = await fetch("/api/update-ticket-status", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ticketId: cardId, status: status }),
+        });
+
+        if (!response.ok) {
+          console.error("Failed to update ticket status");
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
     }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
+    if (isLoading) return; // Cegah drag-and-drop saat loading
     e.preventDefault();
     highlightIndicator(e);
-
-    setActive(true);
   };
 
   const clearHighlights = (els?: HTMLElement[]) => {
@@ -122,18 +135,16 @@ export const Column: React.FC<ColumnProps> = ({
 
   const handleDragLeave = () => {
     clearHighlights();
-    setActive(false);
   };
 
-  // const filteredCards = cards.filter((c) => c.status === status);
-  const filteredCards = tickets.filter((c) => c.status === status);
+  const filteredTickets = tickets.filter((c) => c.status === status);
 
   return (
     <div className="w-72 shrink-0 p-4 border border-white rounded-md">
       <div className="mb-3 flex items-center justify-between">
         <h3 className={`font-medium ${headingColor}`}>{title}</h3>
         <span className="rounded text-sm text-neutral-400">
-          {filteredCards.length}
+          {filteredTickets.length}
         </span>
       </div>
       <div
@@ -142,8 +153,13 @@ export const Column: React.FC<ColumnProps> = ({
         onDragLeave={handleDragLeave}
         className="my-0.5 border-t-1 border-white"
       >
-        {filteredCards.map((c) => (
-          <Card key={c.id} {...c} handleDragStart={handleDragStart} />
+        {filteredTickets.map((c) => (
+          <Card
+            key={c.id}
+            {...c}
+            handleDragStart={handleDragStart}
+            isLoading={isLoading}
+          />
         ))}
         <DropIndicator beforeId={null} status={status} />
       </div>
@@ -158,6 +174,7 @@ const Card: React.FC<CardProps> = ({
   issue,
   status,
   handleDragStart,
+  isLoading, // Terima prop isLoading
 }) => {
   return (
     <>
@@ -165,7 +182,7 @@ const Card: React.FC<CardProps> = ({
       <motion.div
         layout
         layoutId={id}
-        draggable="true"
+        draggable={!isLoading} // Disable drag saat loading
         onDragStart={(e) =>
           handleDragStart(e as unknown as React.DragEvent, {
             id,
@@ -175,15 +192,22 @@ const Card: React.FC<CardProps> = ({
             status,
           })
         }
-        className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
+        className={`cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 ${
+          isLoading ? "cursor-not-allowed opacity-50" : "active:cursor-grabbing"
+        }`}
       >
-        <p className="text-sm font-semibold text-neutral-100">
-          Requestor :{" "}
-          <span>
-            {authorName} ({authorDivision})
+        <p className="flex flex-col text-sm text-neutral-100">
+          <span className="font-semibold border-b-1 border-white">
+            Requestor :{" "}
           </span>
+          {authorName} ({authorDivision} Division)
         </p>
-        <p className="text-sm text-neutral-100">{issue}</p>
+        <p className="flex flex-col text-sm text-neutral-100">
+          <span className="font-semibold border-b-1 border-white">
+            Request Issue :{" "}
+          </span>
+          {issue}
+        </p>
       </motion.div>
     </>
   );
@@ -199,10 +223,7 @@ const DropIndicator: React.FC<DropIndicatorProps> = ({ beforeId, status }) => {
   );
 };
 
-export const BurnBarrel: React.FC<BurnBarrelProps> = ({
-  // setCards,
-  setTickets,
-}) => {
+export const TrashColumn: React.FC<TrashColumnProps> = ({ setTickets }) => {
   const [active, setActive] = useState(false);
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -217,7 +238,6 @@ export const BurnBarrel: React.FC<BurnBarrelProps> = ({
   const handleDragEnd = (e: React.DragEvent) => {
     const cardId = e.dataTransfer.getData("cardId");
 
-    // setCards((pv) => pv.filter((c) => c.id !== cardId));
     setTickets((pv) => pv.filter((c) => c.id !== cardId));
 
     setActive(false);
