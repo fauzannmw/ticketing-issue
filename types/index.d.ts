@@ -42,7 +42,8 @@ export interface ColumnProps {
   tickets: TicketTypes[];
   status: string;
   setTickets: React.Dispatch<React.SetStateAction<TicketTypes[]>>;
-  isLoading: boolean; // Tambahkan prop isLoading
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface CardProps {
@@ -52,7 +53,7 @@ export interface CardProps {
   authorName: string;
   authorDivision: string;
   handleDragStart: (e: React.DragEvent, card: TicketTypes) => void;
-  isLoading: boolean; // Tambahkan prop isLoading
+  isLoading: boolean;
 }
 
 export interface TicketTypes {

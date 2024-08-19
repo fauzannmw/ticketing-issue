@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { FiTrash, FiArrowDown } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+
 import {
   TicketTypes,
   ColumnProps,
@@ -17,15 +19,16 @@ export const Column: React.FC<ColumnProps> = ({
   tickets,
   status,
   setTickets,
-  isLoading, // Terima prop isLoading
+  isLoading,
+  setIsLoading,
 }) => {
   const handleDragStart = (e: React.DragEvent, card: TicketTypes) => {
-    if (isLoading) return; // Cegah drag-and-drop saat loading
+    if (isLoading) return; // Prevent drag-and-drop during loading
     e.dataTransfer.setData("cardId", card.id);
   };
 
   const handleDragEnd = async (e: React.DragEvent) => {
-    if (isLoading) return; // Cegah drag-and-drop saat loading
+    if (isLoading) return; // Prevent drag-and-drop during loading
     const cardId = e.dataTransfer.getData("cardId");
 
     clearHighlights();
@@ -57,7 +60,8 @@ export const Column: React.FC<ColumnProps> = ({
 
       setTickets(copy);
 
-      // Update status di backend
+      // Update ticket status in the backend
+      setIsLoading(true); // Set loading to true before starting the update process
       try {
         const response = await fetch("/api/update-ticket-status", {
           method: "POST",
@@ -73,11 +77,13 @@ export const Column: React.FC<ColumnProps> = ({
       } catch (error) {
         console.error("An error occurred:", error);
       }
+      toast(`Successfully changed ticket status to ${status}`);
+      setIsLoading(false); // Set loading to false after completion
     }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
-    if (isLoading) return; // Cegah drag-and-drop saat loading
+    if (isLoading) return; // Prevent drag-and-drop during loading
     e.preventDefault();
     highlightIndicator(e);
   };
@@ -174,7 +180,7 @@ const Card: React.FC<CardProps> = ({
   issue,
   status,
   handleDragStart,
-  isLoading, // Terima prop isLoading
+  isLoading,
 }) => {
   return (
     <>
@@ -182,7 +188,7 @@ const Card: React.FC<CardProps> = ({
       <motion.div
         layout
         layoutId={id}
-        draggable={!isLoading} // Disable drag saat loading
+        draggable={!isLoading} // Disable drag during loading
         onDragStart={(e) =>
           handleDragStart(e as unknown as React.DragEvent, {
             id,
@@ -226,6 +232,33 @@ const DropIndicator: React.FC<DropIndicatorProps> = ({ beforeId, status }) => {
 export const TrashColumn: React.FC<TrashColumnProps> = ({ setTickets }) => {
   const [active, setActive] = useState(false);
 
+  const handleDrop = async (e: React.DragEvent) => {
+    const cardId = e.dataTransfer.getData("cardId");
+
+    // Remove ticket from state
+    setTickets((prev) => prev.filter((c) => c.id !== cardId));
+
+    // Remove ticket from the backend
+    try {
+      const response = await fetch("/api/delete-ticket", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ticketId: cardId }),
+      });
+
+      if (!response.ok) {
+        console.error("Failed to delete ticket");
+      } else {
+        console.log("Ticket deleted successfully");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+    toast("Successfully deleted ticket");
+  };
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setActive(true);
@@ -235,26 +268,30 @@ export const TrashColumn: React.FC<TrashColumnProps> = ({ setTickets }) => {
     setActive(false);
   };
 
-  const handleDragEnd = (e: React.DragEvent) => {
-    const cardId = e.dataTransfer.getData("cardId");
-
-    setTickets((pv) => pv.filter((c) => c.id !== cardId));
-
+  const handleDropIndicator = () => {
     setActive(false);
   };
 
   return (
-    <div
-      onDrop={handleDragEnd}
+    <motion.div
+      onDrop={handleDrop}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
-      className={`mt-10 grid h-56 w-56 shrink-0 place-content-center rounded border text-3xl ${
-        active
-          ? "border-red-800 bg-red-800/20 text-red-500"
-          : "border-neutral-500 bg-neutral-500/20 text-neutral-500"
+      onDragEnd={handleDropIndicator}
+      className={`relative z-10 flex h-28 w-24 shrink-0 items-center justify-center rounded-md border border-white p-4 shadow-lg shadow-neutral-900 ${
+        active ? "bg-red-500" : "bg-red-600"
       }`}
     >
-      {active ? <FiArrowDown className="animate-bounce" /> : <FiTrash />}
-    </div>
+      <FiTrash className="text-2xl text-white" />
+      {active && (
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1.2 }}
+          className="absolute bottom-[-28px] left-1/2 h-6 w-6 translate-x-[-50%] rounded-full bg-white text-red-600"
+        >
+          <FiArrowDown className="text-2xl text-center" />
+        </motion.div>
+      )}
+    </motion.div>
   );
 };

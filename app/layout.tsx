@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { Provider } from "@/app/provider";
 import NavbarUi from "@/components/ui/navbar";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
           <main className="min-h-screen w-full flex flex-col items-center font-mono">
             <NavbarUi />
             {children}
+            <Toaster />
           </main>
         </Provider>
       </body>

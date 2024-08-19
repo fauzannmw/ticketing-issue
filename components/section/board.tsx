@@ -1,4 +1,4 @@
-// @/app/kanban-boar/page.tsx
+// @/app/kanban-board/page.tsx
 "use client";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
@@ -8,11 +8,11 @@ import { TicketTypes } from "@/types";
 export const Board: React.FC = () => {
   const { data: session } = useSession();
   const [tickets, setTickets] = useState<TicketTypes[]>([]);
-  const [isLoading, setIsLoading] = useState(false); // State untuk loading
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchTickets = async () => {
-      setIsLoading(true); // Set loading menjadi true
+      setIsLoading(true);
       if (session?.user) {
         const response = await fetch("/api/get-all-tickets", {
           method: "POST",
@@ -29,7 +29,7 @@ export const Board: React.FC = () => {
           console.error("Failed to fetch tickets");
         }
       }
-      setIsLoading(false); // Set loading menjadi false
+      setIsLoading(false);
     };
 
     fetchTickets();
@@ -43,7 +43,8 @@ export const Board: React.FC = () => {
         headingColor="text-white"
         tickets={tickets}
         setTickets={setTickets}
-        isLoading={isLoading} // Pass loading state
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
       />
       <Column
         title="In progress"
@@ -51,7 +52,8 @@ export const Board: React.FC = () => {
         headingColor="text-blue-200"
         tickets={tickets}
         setTickets={setTickets}
-        isLoading={isLoading} // Pass loading state
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
       />
       <Column
         title="Complete"
@@ -59,10 +61,10 @@ export const Board: React.FC = () => {
         headingColor="text-emerald-200"
         tickets={tickets}
         setTickets={setTickets}
-        isLoading={isLoading} // Pass loading state
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
       />
       <TrashColumn setTickets={setTickets} />
-      {/* Pass loading state */}
     </div>
   );
 };
