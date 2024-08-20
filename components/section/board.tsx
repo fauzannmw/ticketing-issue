@@ -39,7 +39,7 @@ export const Board: React.FC = () => {
     <div className="h-full w-full max-w-screen-xl flex justify-between gap-3 overflow-scroll">
       <Column
         title="Ticket"
-        status="PENDING"
+        status="backlog"
         headingColor="text-white"
         tickets={tickets}
         setTickets={setTickets}
@@ -48,7 +48,7 @@ export const Board: React.FC = () => {
       />
       <Column
         title="In progress"
-        status="IN_PROGRESS"
+        status="in_progress"
         headingColor="text-blue-200"
         tickets={tickets}
         setTickets={setTickets}
@@ -57,7 +57,7 @@ export const Board: React.FC = () => {
       />
       <Column
         title="Complete"
-        status="COMPLETE"
+        status="complete"
         headingColor="text-emerald-200"
         tickets={tickets}
         setTickets={setTickets}

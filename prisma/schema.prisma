@@ -65,21 +65,30 @@ model Division {
 }
 
 model Ticket {
-    id         String    @id @default(cuid())
-    issue      String
-    status     Status
-    author     User?     @relation(fields: [authorId], references: [id])
-    authorId   String?   @map(name: "author_id")
-    division   Division? @relation(fields: [divisionId], references: [id])
-    divisionId Int?      @map(name: "division_id")
-    createdAt  DateTime  @default(now()) @map(name: "created_at")
-    updatedAt  DateTime  @updatedAt @map(name: "updated_at")
+    id          String    @id @default(cuid())
+    issue       String
+    description String
+    status      Status
+    priority    Priority
+    dueDate     DateTime?
+    author      User?     @relation(fields: [authorId], references: [id])
+    authorId    String?   @map(name: "author_id")
+    division    Division? @relation(fields: [divisionId], references: [id])
+    divisionId  Int?      @map(name: "division_id")
+    createdAt   DateTime  @default(now()) @map(name: "created_at")
+    updatedAt   DateTime  @updatedAt @map(name: "updated_at")
 
     @@map(name: "tickets")
 }
 
 enum Status {
-    PENDING
-    IN_PROGRESS
-    COMPLETE
+    backlog
+    in_progress
+    complete
+}
+
+enum Priority {
+    low
+    medium
+    high
 }

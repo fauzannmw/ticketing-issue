@@ -1,15 +1,24 @@
+// @/app/api/create-ticket/route.ts
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 
 export async function POST(request: Request) {
   try {
-    const { issue, divisionId, userId } = await request.json();
+    const { issue, description, divisionId, priority, dueDate, userId } =
+      await request.json();
 
     // Check the presence of issue, divisionId, and userId
-    if (!issue || !divisionId || !userId) {
-      console.error("Missing required fields:", { issue, divisionId, userId });
+    if (!issue || !divisionId || !userId || !priority || !dueDate || !userId) {
+      console.error("Missing required fields:", {
+        issue,
+        description,
+        divisionId,
+        priority,
+        dueDate,
+        userId,
+      });
       return NextResponse.json(
-        { error: "Issue, divisionId, and userId are required" },
+        { error: "Missing required field" },
         { status: 400 }
       );
     }
@@ -31,7 +40,10 @@ export async function POST(request: Request) {
     const newTicket = await prisma.ticket.create({
       data: {
         issue,
-        status: "PENDING",
+        description,
+        priority,
+        dueDate: dueDate ? new Date(dueDate) : null,
+        status: "backlog",
         author: {
           connect: { id: userId },
         },

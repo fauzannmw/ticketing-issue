@@ -12,6 +12,7 @@ import {
   DropIndicatorProps,
   TrashColumnProps,
 } from "@/types";
+import TicketDetailModal from "./modal";
 
 export const Column: React.FC<ColumnProps> = ({
   title,
@@ -60,8 +61,7 @@ export const Column: React.FC<ColumnProps> = ({
 
       setTickets(copy);
 
-      // Update ticket status in the backend
-      setIsLoading(true); // Set loading to true before starting the update process
+      setIsLoading(true);
       try {
         const response = await fetch("/api/update-ticket-status", {
           method: "POST",
@@ -77,7 +77,7 @@ export const Column: React.FC<ColumnProps> = ({
       } catch (error) {
         console.error("An error occurred:", error);
       }
-      toast(`Successfully changed ticket status to ${status}`);
+      toast(`Ticket status changed to ${status}`);
       setIsLoading(false); // Set loading to false after completion
     }
   };
@@ -198,7 +198,7 @@ const Card: React.FC<CardProps> = ({
             status,
           })
         }
-        className={`cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 ${
+        className={`cursor-grab flex flex-col p-3 gap-1 rounded border border-neutral-700 bg-neutral-800 ${
           isLoading ? "cursor-not-allowed opacity-50" : "active:cursor-grabbing"
         }`}
       >
@@ -214,6 +214,7 @@ const Card: React.FC<CardProps> = ({
           </span>
           {issue}
         </p>
+        <TicketDetailModal ticketId={id} />
       </motion.div>
     </>
   );
@@ -256,7 +257,7 @@ export const TrashColumn: React.FC<TrashColumnProps> = ({ setTickets }) => {
     } catch (error) {
       console.error("An error occurred:", error);
     }
-    toast("Successfully deleted ticket");
+    toast("Ticket Deleted Successfully");
   };
 
   const handleDragOver = (e: React.DragEvent) => {

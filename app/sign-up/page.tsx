@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@nextui-org/react";
+import { toast } from "sonner";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -41,11 +42,11 @@ export default function SignUpPage() {
       });
 
       if (response.ok) {
-        // Redirect to sign-in page after successful registration
+        toast("Success Register User");
         router.push("/sign-in");
       } else {
         const { message } = await response.json();
-        alert(message); // Show error message if registration fails
+        alert(message);
       }
     } catch (error) {
       console.error("Error during registration:", error); // Log errors during registration
@@ -115,8 +116,11 @@ export default function SignUpPage() {
             className="w-full p-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded"
           >
             <option disabled>Select Division</option>
-            <option value="1">Technology</option>
-            <option value="2">Human Resource</option>
+            <option value="1">Human Resource</option>
+            <option value="2">Technology</option>
+            <option value="3">Creative</option>
+            <option value="4">Marketing</option>
+            <option value="5">Redaksi</option>
           </select>
         </div>
         <div className="flex flex-col gap-4">

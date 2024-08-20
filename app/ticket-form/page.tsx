@@ -1,16 +1,31 @@
+// @/app/ticket-form/page.tsx
 "use client";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import {
+  Button,
+  DatePicker,
+  Input,
+  Select,
+  SelectItem,
+  Textarea,
+} from "@nextui-org/react";
 import { departments } from "@/data/departments";
+import { getLocalTimeZone, today, DateValue } from "@internationalized/date";
+import { dateToIso } from "@/lib/utils/date";
 
 export default function TicketFormPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const [issue, setIssue] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [divisionId, setDivision] = useState<string>("");
+  const [priority, setPriority] = useState<string>("");
+  const [dueDate, setDueDate] = useState<DateValue | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const dueDateISO = dueDate ? dateToIso(dueDate) : null;
 
   // Handle form submission
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -31,18 +46,24 @@ export default function TicketFormPage() {
       },
       body: JSON.stringify({
         issue,
+        description,
         divisionId,
+        priority,
+        dueDate: dueDateISO,
         userId: session.user.userId,
       }),
     });
 
     setIssue("");
+    setDescription("");
     setDivision("");
+    setPriority("");
+    setDueDate(null);
 
     if (response.ok) {
-      router.push("/"); // Redirect to home page on success
+      router.push("/");
     } else {
-      console.error("Failed to create ticket"); // Log error on failure
+      console.error("Failed to create ticket");
     }
   };
 
@@ -55,14 +76,22 @@ export default function TicketFormPage() {
         <h1 className="text-lg font-semibold">Assign Ticket</h1>
         <Input
           type="text"
-          label="Task"
+          label="Ticket Name"
           radius="sm"
           variant="bordered"
           value={issue}
           onChange={(e) => setIssue(e.target.value)}
         />
+        <Textarea
+          variant="bordered"
+          radius="sm"
+          label="Ticket Description"
+          placeholder="......"
+          description="Enter a concise description of your Ticket."
+          onChange={(e) => setDescription(e.target.value)}
+        />
         <Select
-          label="Assign To"
+          label="Assign To (Division)"
           radius="sm"
           variant="bordered"
           onChange={(e) => setDivision(e.target.value)}
@@ -73,6 +102,29 @@ export default function TicketFormPage() {
             </SelectItem>
           ))}
         </Select>
+        <Select
+          label="Priority Level"
+          radius="sm"
+          variant="bordered"
+          onChange={(e) => setPriority(e.target.value)}
+        >
+          <SelectItem key={"low"} value={"low"}>
+            low
+          </SelectItem>
+          <SelectItem key={"medium"} value={"medium"}>
+            medium
+          </SelectItem>
+          <SelectItem key={"high"} value={"high"}>
+            high
+          </SelectItem>
+        </Select>
+        <DatePicker
+          label="Due Date"
+          variant="bordered"
+          showMonthAndYearPickers
+          minValue={today(getLocalTimeZone())}
+          onChange={setDueDate}
+        />
         <Button
           type="submit"
           variant="ghost"
@@ -81,7 +133,7 @@ export default function TicketFormPage() {
           isLoading={isLoading}
           className="p-3 font-semibold"
         >
-          Submit
+          Submit Ticket
         </Button>
       </form>
     </div>
