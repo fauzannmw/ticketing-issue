@@ -35,6 +35,11 @@ export async function POST(request: Request) {
         author: {
           select: {
             name: true,
+            division: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
         division: {
@@ -51,7 +56,7 @@ export async function POST(request: Request) {
       issue: ticket.issue,
       status: ticket.status,
       authorName: ticket.author?.name,
-      authorDivision: ticket.division?.name,
+      authorDivision: ticket.author?.division?.name,
     }));
 
     return NextResponse.json(ticketData, { status: 200 });

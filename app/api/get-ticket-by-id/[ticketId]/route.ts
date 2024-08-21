@@ -15,6 +15,11 @@ export async function GET(
         author: {
           select: {
             name: true,
+            division: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },

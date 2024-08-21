@@ -4,10 +4,17 @@ import prisma from "@/lib/db";
 
 export async function GET(
   request: Request,
-  { params }: { params: { divisionId: string } }
+  {
+    params,
+  }: {
+    params: {
+      divisionId: string;
+      userId: string;
+    };
+  }
 ) {
   try {
-    const { divisionId } = params;
+    const { divisionId, userId } = params;
     const divisionIdInt = parseInt(divisionId, 10);
 
     if (isNaN(divisionIdInt)) {
@@ -17,8 +24,31 @@ export async function GET(
       );
     }
 
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        divisionId: true,
+      },
+    });
+
+    if (!user || !user.divisionId) {
+      return NextResponse.json(
+        { error: "User or user's division not found" },
+        { status: 404 }
+      );
+    }
+
+    const userDivisionId = user.divisionId;
+
     const tickets = await prisma.ticket.findMany({
-      where: { divisionId: divisionIdInt },
+      where: {
+        author: {
+          divisionId: divisionIdInt,
+        },
+        divisionId: userDivisionId,
+      },
       select: {
         id: true,
         issue: true,
@@ -26,6 +56,11 @@ export async function GET(
         author: {
           select: {
             name: true,
+            division: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
         division: {
@@ -48,7 +83,7 @@ export async function GET(
       issue: ticket.issue,
       status: ticket.status,
       authorName: ticket.author?.name,
-      authorDivision: ticket.division?.name,
+      authorDivision: ticket.author?.division?.name,
     }));
 
     return NextResponse.json(ticketData, { status: 200 });

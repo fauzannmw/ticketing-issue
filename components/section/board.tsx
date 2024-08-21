@@ -26,7 +26,7 @@ export const Board: React.FC = () => {
 
       if (selectedDivision) {
         response = await fetch(
-          `/api/get-tickets-by-division/${selectedDivision}`
+          `/api/get-tickets-by-division/${selectedDivision}?userId=${session.user.userId}`
         );
       } else {
         response = await fetch("/api/get-all-tickets", {
@@ -56,7 +56,7 @@ export const Board: React.FC = () => {
 
   return (
     <div className="h-full w-full max-w-screen-xl flex flex-col justify-between items-center gap-6 overflow-scroll">
-      <div className="lg:w-1/2 flex justify-center items-center">
+      <div className="w-full lg:w-1/2 flex justify-center items-center">
         <Select
           label="Filter Ticket by Author Division"
           labelPlacement="outside"
@@ -76,7 +76,7 @@ export const Board: React.FC = () => {
           ))}
         </Select>
       </div>
-      <div className="w-full flex justify-between items-center gap-3">
+      <div className="w-full flex justify-around gap-3">
         <Column
           title="Ticket"
           status="backlog"
