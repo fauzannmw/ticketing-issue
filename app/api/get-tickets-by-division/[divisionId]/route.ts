@@ -9,17 +9,26 @@ export async function GET(
   }: {
     params: {
       divisionId: string;
-      userId: string;
     };
   }
 ) {
   try {
-    const { divisionId, userId } = params;
+    const url = new URL(request.url);
+    const userId = url.searchParams.get("userId"); // Mengambil userId dari query parameters
+    const { divisionId } = params;
+
     const divisionIdInt = parseInt(divisionId, 10);
 
     if (isNaN(divisionIdInt)) {
       return NextResponse.json(
         { error: "Invalid division ID" },
+        { status: 400 }
+      );
+    }
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "User ID is missing" },
         { status: 400 }
       );
     }
