@@ -1,5 +1,4 @@
 // @/app/sign-up/page.tsx
-
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -17,7 +16,6 @@ export default function SignUpPage() {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Handle changes to form fields
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -28,7 +26,6 @@ export default function SignUpPage() {
     });
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -49,7 +46,7 @@ export default function SignUpPage() {
         alert(message);
       }
     } catch (error) {
-      console.error("Error during registration:", error); // Log errors during registration
+      console.error("Error during registration:", error);
     } finally {
       setIsLoading(false);
     }

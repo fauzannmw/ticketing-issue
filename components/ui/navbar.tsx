@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect } from "react";
 
-export default function NavbarUi() {
+export const NavbarUi: React.FC = () => {
   const currentPath = usePathname();
   const { data: session } = useSession();
   useEffect(() => {
@@ -57,4 +57,4 @@ export default function NavbarUi() {
       )}
     </nav>
   );
-}
+};

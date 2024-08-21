@@ -4,8 +4,12 @@ import {
   ModalHeader,
   ModalBody,
   useDisclosure,
+  Button,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface ModalUiProps {
   ticketId: string;
@@ -25,7 +29,7 @@ interface Author {
   name: string;
 }
 
-export default function TicketDetailModal({ ticketId }: ModalUiProps) {
+export const TicketDetailModal: React.FC<ModalUiProps> = ({ ticketId }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [ticketDetail, setTicketDetail] = useState<TicketDetail | null>(null);
@@ -79,6 +83,7 @@ export default function TicketDetailModal({ ticketId }: ModalUiProps) {
         setTicketDetail((prev) =>
           prev ? { ...prev, status: newStatus } : prev
         );
+        toast(`Ticket Status changed to ${newStatus}`);
         setNewStatus("");
       } else {
         console.error("Failed to update ticket status");
@@ -94,7 +99,7 @@ export default function TicketDetailModal({ ticketId }: ModalUiProps) {
         onClick={onOpen}
         className="w-full flex justify-center items-center p-0.5 border-1 border-white rounded-md text-sm hover:scale-105 duration-250"
       >
-        See Detail {ticketId}
+        See Detail
       </button>
       <Modal
         size="xl"
@@ -127,7 +132,7 @@ export default function TicketDetailModal({ ticketId }: ModalUiProps) {
                       </div>
                     </div>
 
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-3">
                       <div>
                         <span className="text-sm text-gray-500">Issue</span>
                         <p className="font-medium">{ticketDetail.issue}</p>
@@ -142,7 +147,7 @@ export default function TicketDetailModal({ ticketId }: ModalUiProps) {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-3">
                       <div className="flex flex-col">
                         <span className="text-sm text-gray-500">Status</span>
                         <span
@@ -180,30 +185,38 @@ export default function TicketDetailModal({ ticketId }: ModalUiProps) {
                       </span>
                     </div>
 
-                    <div className="mt-4">
-                      <label
-                        htmlFor="status"
-                        className="block text-sm text-gray-500"
-                      >
-                        Update Status
-                      </label>
-                      <select
-                        id="status"
-                        value={newStatus}
-                        // @ts-ignore
-                        onChange={handleStatusChange}
-                        className="mt-1 p-2 border rounded-md w-full"
-                      >
-                        <option value="backlog">Backlog</option>
-                        <option value="in_progress">In Progress</option>
-                        <option value="complete">Complete</option>
-                      </select>
-                      <button
+                    <div className="w-full flex flex-col gap-3">
+                      <div className="w-full flex flex-col">
+                        <Select
+                          label="New Status"
+                          labelPlacement="outside"
+                          radius="sm"
+                          size="md"
+                          variant="bordered"
+                          onChange={(e) => setNewStatus(e.target.value)}
+                        >
+                          <SelectItem key={"backlog"} value={"backlog"}>
+                            backlog
+                          </SelectItem>
+                          <SelectItem key={"in_progress"} value={"in_progress"}>
+                            in_progress
+                          </SelectItem>
+                          <SelectItem key={"complete"} value={"complete"}>
+                            complete
+                          </SelectItem>
+                        </Select>
+                      </div>
+                      <Button
                         onClick={handleSubmit}
-                        className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                        type="submit"
+                        variant="ghost"
+                        radius="sm"
+                        size="md"
+                        isLoading={isLoading}
+                        className="p-3 font-semibold"
                       >
                         Change Status
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ) : (
@@ -216,4 +229,4 @@ export default function TicketDetailModal({ ticketId }: ModalUiProps) {
       </Modal>
     </>
   );
-}
+};

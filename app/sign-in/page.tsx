@@ -1,7 +1,4 @@
 // @/app/sign-in/page.tsx
-// alkdjaslkdsl
-// kjsadhasdjhad
-
 "use client";
 
 import { useState } from "react";
@@ -18,7 +15,6 @@ export default function SignIn() {
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Handle form submission
   const handelSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
@@ -32,7 +28,6 @@ export default function SignIn() {
         callbackUrl: "/",
       });
     } catch (error) {
-      // Set error message if sign-in fails
       setError("Something went wrong");
     } finally {
       setIsLoading(false);

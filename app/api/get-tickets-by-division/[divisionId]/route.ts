@@ -1,33 +1,24 @@
-// @/app/api/get-all-tickets/route.ts
+// @/app/api/get-tickets-by-division/[divisionId]/route.ts
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 
-export async function POST(request: Request) {
+export async function GET(
+  request: Request,
+  { params }: { params: { divisionId: string } }
+) {
   try {
-    const { userId } = await request.json();
+    const { divisionId } = params;
+    const divisionIdInt = parseInt(divisionId, 10);
 
-    if (!userId) {
+    if (isNaN(divisionIdInt)) {
       return NextResponse.json(
-        { error: "User ID is required" },
+        { error: "Invalid division ID" },
         { status: 400 }
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: { division: true },
-    });
-
-    // Check if the user exists and has a division
-    if (!user || !user.divisionId) {
-      return NextResponse.json(
-        { error: "User or division not found" },
-        { status: 404 }
-      );
-    }
-
     const tickets = await prisma.ticket.findMany({
-      where: { divisionId: user.divisionId },
+      where: { divisionId: divisionIdInt },
       select: {
         id: true,
         issue: true,
@@ -45,7 +36,13 @@ export async function POST(request: Request) {
       },
     });
 
-    // Transform data to include only id, issue, status, and author's name
+    if (tickets.length === 0) {
+      return NextResponse.json(
+        { message: "No tickets found for this division" },
+        { status: 404 }
+      );
+    }
+
     const ticketData = tickets.map((ticket) => ({
       id: ticket.id,
       issue: ticket.issue,
@@ -56,7 +53,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(ticketData, { status: 200 });
   } catch (error) {
-    console.error("Error in get-tickets API:", error);
+    console.error("Error in get-tickets-by-division API:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

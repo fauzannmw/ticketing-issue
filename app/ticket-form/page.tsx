@@ -11,6 +11,8 @@ import {
   SelectItem,
   Textarea,
 } from "@nextui-org/react";
+import { toast } from "sonner";
+
 import { departments } from "@/data/departments";
 import { getLocalTimeZone, today, DateValue } from "@internationalized/date";
 import { dateToIso } from "@/lib/utils/date";
@@ -38,7 +40,6 @@ export default function TicketFormPage() {
       return;
     }
 
-    // Call the create-ticket API
     const response = await fetch("/api/create-ticket", {
       method: "POST",
       headers: {
@@ -61,6 +62,7 @@ export default function TicketFormPage() {
     setDueDate(null);
 
     if (response.ok) {
+      toast("Success Create Ticket");
       router.push("/");
     } else {
       console.error("Failed to create ticket");

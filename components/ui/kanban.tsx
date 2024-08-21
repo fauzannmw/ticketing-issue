@@ -12,7 +12,7 @@ import {
   DropIndicatorProps,
   TrashColumnProps,
 } from "@/types";
-import TicketDetailModal from "./modal";
+import { TicketDetailModal } from "./modal";
 
 export const Column: React.FC<ColumnProps> = ({
   title,
@@ -78,7 +78,7 @@ export const Column: React.FC<ColumnProps> = ({
         console.error("An error occurred:", error);
       }
       toast(`Ticket status changed to ${status}`);
-      setIsLoading(false); // Set loading to false after completion
+      setIsLoading(false);
     }
   };
 
@@ -239,7 +239,6 @@ export const TrashColumn: React.FC<TrashColumnProps> = ({ setTickets }) => {
     // Remove ticket from state
     setTickets((prev) => prev.filter((c) => c.id !== cardId));
 
-    // Remove ticket from the backend
     try {
       const response = await fetch("/api/delete-ticket", {
         method: "DELETE",
@@ -279,7 +278,7 @@ export const TrashColumn: React.FC<TrashColumnProps> = ({ setTickets }) => {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDragEnd={handleDropIndicator}
-      className={`relative z-10 flex h-28 w-24 shrink-0 items-center justify-center rounded-md border border-white p-4 shadow-lg shadow-neutral-900 ${
+      className={`relative z-10 flex min-w-28 min-h-28 h-full w-full max-w-32 max-h-32 shrink-0 items-center justify-center rounded-md border border-white p-4 shadow-lg shadow-neutral-900 ${
         active ? "bg-red-500" : "bg-red-600"
       }`}
     >

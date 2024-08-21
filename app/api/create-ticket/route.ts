@@ -7,7 +7,6 @@ export async function POST(request: Request) {
     const { issue, description, divisionId, priority, dueDate, userId } =
       await request.json();
 
-    // Check the presence of issue, divisionId, and userId
     if (!issue || !divisionId || !userId || !priority || !dueDate || !userId) {
       console.error("Missing required fields:", {
         issue,
@@ -36,7 +35,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid division" }, { status: 404 });
     }
 
-    // Create a new ticket in the database
     const newTicket = await prisma.ticket.create({
       data: {
         issue,
