@@ -13,8 +13,7 @@ export async function GET(
   }
 ) {
   try {
-    const url = new URL(request.url);
-    const userId = url.searchParams.get("userId"); // Mengambil userId dari query parameters
+    const userId = request.headers.get("User-Id");
     const { divisionId } = params;
 
     const divisionIdInt = parseInt(divisionId, 10);

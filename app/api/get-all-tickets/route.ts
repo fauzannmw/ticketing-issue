@@ -2,9 +2,9 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 
-export async function POST(request: Request) {
+export async function GET(request: Request) {
   try {
-    const { userId } = await request.json();
+    const userId = request.headers.get("User-Id");
 
     if (!userId) {
       return NextResponse.json(
@@ -18,7 +18,6 @@ export async function POST(request: Request) {
       include: { division: true },
     });
 
-    // Check if the user exists and has a division
     if (!user || !user.divisionId) {
       return NextResponse.json(
         { error: "User or division not found" },

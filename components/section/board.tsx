@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
-import { Select, SelectItem } from "@nextui-org/react";
+import { Button, Select, SelectItem } from "@nextui-org/react";
 import { TrashColumn, Column } from "@/components/ui/kanban";
 
 import { TicketTypes } from "@/types";
@@ -17,25 +17,32 @@ export const Board: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDivision, setSelectedDivision] = useState<string>("");
 
+  console.log(typeof selectedDivision);
+
   useEffect(() => {
     const fetchTickets = async () => {
       setIsLoading(true);
 
-      let response;
-
       if (!session?.user) return;
+
+      let response;
+      const headers = {
+        "Content-Type": "application/json",
+        "User-Id": String(session.user.userId),
+      };
 
       if (selectedDivision) {
         response = await fetch(
-          `/api/get-tickets-by-division/${selectedDivision}?userId=${session.user.userId}`
+          `/api/get-tickets-by-division/${selectedDivision}`,
+          {
+            method: "GET",
+            headers,
+          }
         );
       } else {
         response = await fetch("/api/get-all-tickets", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId: session?.user.userId }),
+          method: "GET",
+          headers,
         });
       }
 
@@ -64,25 +71,39 @@ export const Board: React.FC = () => {
           </div>
         </div>
       )}
-      <div className="w-full lg:w-1/2 flex justify-center items-center">
+      <div className="w-full lg:w-1/2 flex justify-center items-end gap-3">
         <Select
           label="Filter Ticket by Author Division"
           labelPlacement="outside"
           radius="sm"
           size="md"
           variant="bordered"
+          value={selectedDivision}
           onChange={(e) => setSelectedDivision(e.target.value)}
           classNames={{
             label: "text-white",
             value: "text-white",
           }}
         >
-          {departments.map((department) => (
-            <SelectItem key={department.key} value={department.key}>
-              {department.label}
-            </SelectItem>
-          ))}
+          {departments
+            .filter(
+              (department) =>
+                department.key !== String(session?.user?.userDivisionId)
+            )
+            .map((department) => (
+              <SelectItem key={department.key} value={department.key}>
+                {department.label}
+              </SelectItem>
+            ))}
         </Select>
+        <Button
+          onClick={() => setSelectedDivision("0")}
+          variant="bordered"
+          radius="sm"
+          className="px-6 text-white"
+        >
+          See All Tickets
+        </Button>
       </div>
       <div className="w-full flex justify-around gap-3">
         <Column

@@ -13,9 +13,9 @@ import {
 } from "@nextui-org/react";
 import { toast } from "sonner";
 
-import { departments } from "@/data/departments";
 import { getLocalTimeZone, today, DateValue } from "@internationalized/date";
 import { dateToIso } from "@/lib/utils/date";
+import { departments } from "@/data/departments";
 
 export default function TicketFormPage() {
   const router = useRouter();
@@ -29,12 +29,10 @@ export default function TicketFormPage() {
 
   const dueDateISO = dueDate ? dateToIso(dueDate) : null;
 
-  // Handle form submission
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Check if the user is logged in
     if (!session?.user) {
       console.error("User is not authenticated");
       return;
@@ -98,12 +96,18 @@ export default function TicketFormPage() {
           variant="bordered"
           onChange={(e) => setDivision(e.target.value)}
         >
-          {departments.map((department) => (
-            <SelectItem key={department.key} value={department.key}>
-              {department.label}
-            </SelectItem>
-          ))}
+          {departments
+            .filter(
+              (department) =>
+                department.key !== String(session?.user?.userDivisionId)
+            )
+            .map((department) => (
+              <SelectItem key={department.key} value={department.key}>
+                {department.label}
+              </SelectItem>
+            ))}
         </Select>
+
         <Select
           label="Priority Level"
           radius="sm"

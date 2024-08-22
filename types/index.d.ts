@@ -9,7 +9,7 @@ declare module "next-auth" {
     name: string;
     email: string;
     userId: string;
-    divisionId?: number;
+    userDivisionId?: number;
   }
   /**
    * The shape of the account object returned in the OAuth providers' `account` callback,
