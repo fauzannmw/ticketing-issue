@@ -9,6 +9,7 @@ import { TrashColumn, Column } from "@/components/ui/kanban";
 import { TicketTypes } from "@/types";
 import { toast } from "sonner";
 import { departments } from "@/data/departments";
+import Image from "next/image";
 
 export const Board: React.FC = () => {
   const { data: session } = useSession();
@@ -56,6 +57,13 @@ export const Board: React.FC = () => {
 
   return (
     <div className="h-full w-full max-w-screen-xl flex flex-col justify-between items-center gap-6 overflow-scroll">
+      {isLoading && (
+        <div className="absolute w-full h-full flex justify-center items-center bg-black bg-opacity-10">
+          <div className="w-24 h-24 relative">
+            <Image src={"/assets/images/loading-animation.gif"} alt="" fill />
+          </div>
+        </div>
+      )}
       <div className="w-full lg:w-1/2 flex justify-center items-center">
         <Select
           label="Filter Ticket by Author Division"
