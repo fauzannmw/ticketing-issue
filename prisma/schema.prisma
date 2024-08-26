@@ -49,6 +49,7 @@ model User {
     divisionId Int?      @map(name: "division_id")
     account    Account?  @relation
     tickets    Ticket[]
+    role       Role      @default(user)
     createdAt  DateTime  @default(now()) @map(name: "created_at")
     updatedAt  DateTime  @updatedAt @map(name: "updated_at")
 
@@ -79,6 +80,12 @@ model Ticket {
     updatedAt   DateTime  @updatedAt @map(name: "updated_at")
 
     @@map(name: "tickets")
+}
+
+enum Role {
+    admin
+    moderator
+    user
 }
 
 enum Status {

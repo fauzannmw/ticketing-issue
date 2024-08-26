@@ -29,6 +29,7 @@ export async function POST(request: Request) {
       name: account.user.name,
       email: account.email,
       division: account.user.divisionId,
+      role: account.user.role,
     },
   });
 }

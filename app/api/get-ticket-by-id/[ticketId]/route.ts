@@ -22,6 +22,11 @@ export async function GET(
             },
           },
         },
+        division: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 

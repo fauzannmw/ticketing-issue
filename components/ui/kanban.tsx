@@ -1,10 +1,12 @@
 // @/components/ui/kanban.tsx
 "use client";
 import React, { useState } from "react";
-import { FiTrash, FiArrowDown } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
+import { TicketDetailModal } from "@/components/ui/modal-detail";
+
+import { FiTrash, FiArrowDown } from "react-icons/fi";
 import {
   TicketTypes,
   ColumnProps,
@@ -12,7 +14,6 @@ import {
   DropIndicatorProps,
   TrashColumnProps,
 } from "@/types";
-import { TicketDetailModal } from "./modal";
 
 export const Column: React.FC<ColumnProps> = ({
   title,

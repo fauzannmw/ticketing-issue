@@ -18,7 +18,6 @@ export const {
         password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
-        // Memanggil api auth Login
         const res = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -28,7 +27,6 @@ export const {
           }),
         });
 
-        // Mengubah reponse ke dalam bentuk json
         const user = await res.json();
 
         if (!res.ok) {
@@ -44,9 +42,10 @@ export const {
     async jwt({ token, account, user }) {
       if (user) {
         token.userId = user.id;
-        // @ts-ignore
         token.userDivisionId = user.division;
+        token.role = user.role;
       }
+      // console.log(token, account, user);
       return token;
     },
     async session({ session, token, user }) {
@@ -55,9 +54,13 @@ export const {
         session.user.userId = token.userId;
         // @ts-ignore
         session.user.userDivisionId = token.userDivisionId;
+        // @ts-ignore
+        session.user.role = token.role;
       }
+      // console.log(session, token, user);
       return session;
     },
+
     authorized({ auth }) {
       const isAuthenticated = !!auth?.user;
 

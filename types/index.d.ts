@@ -10,7 +10,10 @@ declare module "next-auth" {
     email: string;
     userId: string;
     userDivisionId?: number;
+    division: number;
+    role: "admin" | "moderator" | "user";
   }
+
   /**
    * The shape of the account object returned in the OAuth providers' `account` callback,
    * Usually contains information about the provider being used, like OAuth tokens (`access_token`, etc).
@@ -62,6 +65,7 @@ export interface TicketTypes {
   status: string;
   authorName: string;
   authorDivision: string;
+  divisionName?: string;
 }
 
 export interface DropIndicatorProps {

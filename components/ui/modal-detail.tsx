@@ -63,10 +63,6 @@ export const TicketDetailModal: React.FC<ModalUiProps> = ({ ticketId }) => {
     });
   };
 
-  const handleStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewStatus(e.target.value);
-  };
-
   const handleSubmit = async () => {
     if (!newStatus) return;
 
