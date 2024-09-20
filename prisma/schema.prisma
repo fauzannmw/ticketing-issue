@@ -10,13 +10,14 @@ datasource db {
 }
 
 model Account {
-    id            String    @id @default(cuid())
-    user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId        String    @unique @map(name: "user_id")
-    email         String    @unique
-    emailVerified DateTime? @map("email_verified")
-    passwordHash  String
-    sessions      Session[]
+    id              String    @id @default(cuid())
+    user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId          String    @unique @map(name: "user_id")
+    email           String    @unique
+    emailVerified   DateTime? @map("email_verified")
+    accountVerified Boolean   @default(false)
+    passwordHash    String
+    sessions        Session[]
 
     @@map(name: "accounts")
 }

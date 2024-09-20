@@ -32,8 +32,10 @@ export async function POST(request: Request) {
         create: {
           email,
           passwordHash,
+          accountVerified: email == "mentoree.ub@gmail.com",
         },
       },
+      role: email == "mentoree.ub@gmail.com" ? "admin" : "user",
     },
   });
 

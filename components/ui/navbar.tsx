@@ -31,6 +31,18 @@ export const NavbarUi: React.FC = () => {
       >
         Ticket List
       </Link>
+      {session?.user?.role == "moderator" && (
+        <Link
+          href={"/ticket-progress"}
+          className={`${
+            currentPath === "/ticket-progress" ? "underline" : "no-underline"
+          } 
+          text-white hover:opacity-75 transition duration-500`}
+        >
+          Ticket Progress
+        </Link>
+      )}
+
       <Link
         href={"/ticket-form"}
         className={`${

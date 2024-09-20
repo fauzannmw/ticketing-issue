@@ -30,6 +30,7 @@ export async function POST(request: Request) {
       email: account.email,
       division: account.user.divisionId,
       role: account.user.role,
+      verified: account.accountVerified,
     },
   });
 }

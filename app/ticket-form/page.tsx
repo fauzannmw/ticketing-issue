@@ -20,6 +20,7 @@ import { departments } from "@/data/departments";
 export default function TicketFormPage() {
   const router = useRouter();
   const { data: session } = useSession();
+  console.log(session?.user?.role);
   const [issue, setIssue] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [divisionId, setDivision] = useState<string>("");

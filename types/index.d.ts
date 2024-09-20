@@ -11,6 +11,7 @@ declare module "next-auth" {
     userId: string;
     userDivisionId?: number;
     division: number;
+    verified: boolean;
     role: "admin" | "moderator" | "user";
   }
 
