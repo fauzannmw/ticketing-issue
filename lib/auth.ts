@@ -66,4 +66,7 @@ export const {
       return isAuthenticated;
     },
   },
+  session: {
+    maxAge: 300,
+  },
 });
