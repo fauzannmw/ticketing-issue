@@ -25,7 +25,6 @@ export async function POST(request: Request) {
     // Ensure that divisionId is an integer, convert if necessary
     const idDivision = parseInt(divisionId, 10);
 
-    // Verify that the division with the specified ID exists in the database
     const divisionExists = await prisma.division.findUnique({
       where: { id: idDivision },
     });

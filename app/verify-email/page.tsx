@@ -14,7 +14,7 @@ export default function VerifyEmailPage() {
         <h1 className="text-xl font-semibold">Verify Your Account</h1>
         <p>
           Hi {session?.user?.name}, please verify your account to access all
-          features. Ask moderator to give access to your Account :{" "}
+          features. Ask admin to give access to your Account :{" "}
           {session?.user?.email}.
         </p>
         <p className="font-semibold">

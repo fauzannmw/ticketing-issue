@@ -28,10 +28,10 @@ export async function GET(request: Request) {
     const tickets = await prisma.ticket.findMany({
       where: {
         author: {
-          divisionId: user.divisionId, // Mencari tiket yang diarahkan oleh divisi user
+          divisionId: user.divisionId,
         },
         divisionId: {
-          not: user.divisionId, // Pastikan target divisi bukan divisi user
+          not: user.divisionId,
         },
       },
       select: {
